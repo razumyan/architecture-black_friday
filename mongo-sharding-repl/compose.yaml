@@ -1,0 +1,73 @@
+name: mongo-sharding-repl
+
+include:
+  - path:
+      - ./generated-sharding.yaml
+
+services:
+  mongodb-configsvr:
+    container_name: mongodb-configsvr
+    image: dh-mirror.gitverse.ru/mongo:latest
+    command:
+      [
+        "--configsvr",
+        "--replSet",
+        "config_rs",
+        "--bind_ip_all",
+        "--port",
+        "27017"
+      ]
+    networks:
+      - bf-network
+    volumes:
+      - mongodb_configsvr_container:/data/db
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+      interval: 5s
+      start_period: 10s
+
+  mongodb-router:
+    container_name: mongodb-router
+    image: dh-mirror.gitverse.ru/mongo:latest
+    depends_on:
+      - mongodb-configsvr
+    command: [
+      "mongos",
+      "--configdb",
+      "config_rs/mongodb-configsvr:27017",
+      "--bind_ip_all",
+      "--port",
+      "27017"
+    ]
+    networks:
+      - bf-network
+    volumes:
+      - mongodb_router_container:/data/db
+    healthcheck:
+      test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+      interval: 5s
+      start_period: 10s
+
+  pymongo_api:
+    container_name: pymongo_api
+    build:
+      context: api_app
+      dockerfile: Dockerfile
+    depends_on:
+      - mongodb-router
+    ports:
+      - 8080:8080
+    networks:
+      - bf-network
+    environment:
+      MONGODB_URL: "mongodb://mongodb-router"
+      MONGODB_DATABASE_NAME: "somedb"
+
+volumes:
+  mongodb_router_container:
+  mongodb_configsvr_container:
+
+networks:
+  bf-network:
+    name: bf-network
+    driver: bridge

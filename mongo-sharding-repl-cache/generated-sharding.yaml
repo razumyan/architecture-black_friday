@@ -1,0 +1,140 @@
+services:
+    mongodb-shard-1-1:
+      container_name: mongodb-shard-1-1
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-1",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_1_1_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+    mongodb-shard-1-2:
+      container_name: mongodb-shard-1-2
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-1",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_1_2_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+    mongodb-shard-1-3:
+      container_name: mongodb-shard-1-3
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-1",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_1_3_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+    mongodb-shard-2-1:
+      container_name: mongodb-shard-2-1
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-2",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_2_1_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+    mongodb-shard-2-2:
+      container_name: mongodb-shard-2-2
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-2",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_2_2_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+    mongodb-shard-2-3:
+      container_name: mongodb-shard-2-3
+      image: dh-mirror.gitverse.ru/mongo:latest
+      command:
+        [
+          "--shardsvr",
+          "--replSet",
+          "bf-shard-2",
+          "--bind_ip_all",
+          "--port",
+          "27017"
+        ]
+      depends_on:
+        - mongodb-configsvr
+      networks:
+        - bf-network
+      volumes:
+        - mongodb_shard_2_3_container:/data/db
+      healthcheck:
+        test: [ "CMD", "mongo", "--eval", "db.adminCommand('ping')" ]
+        interval: 5s
+        start_period: 10s
+volumes:
+  mongodb_shard_1_1_container:
+  mongodb_shard_1_2_container:
+  mongodb_shard_1_3_container:
+  mongodb_shard_2_1_container:
+  mongodb_shard_2_2_container:
+  mongodb_shard_2_3_container:
